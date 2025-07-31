@@ -16,11 +16,15 @@ import Mern from '/src/components/Courses/Channels/Mern/Mern.jsx'
 
 import ApnaCollegeCHome from './components/VideoPlayer/C/Apna College/ApnaCollegeCHome.jsx'
 import JennyCHome from './components/VideoPlayer/C/Jennys Lecture/JennyCHome.jsx'
-
+import CollegeWallahCHome from './components/VideoPlayer/C/CollegeWallah/CollegeWalLahCHome.jsx'
 // C++
-import ApnaCollegeCppHome from './components/VideoPlayer/Cpp/Apna College/ApnaCollegeCppHome.jsx'
-
-
+import ApnaCollegeCppHome from '../src/components/VideoPlayer/Cpp/Apna College/ApnaCollegeCppHome.jsx'
+import ChaiAurCodeCppHome from '../src/components/VideoPlayer/Cpp/ChaiAurCode/ChaiAurCodeCppHome.jsx'
+import JennyCppHome from '../src/components/VideoPlayer/Cpp/Jennys Lecture/JennyCppHome.jsx'
+//Java
+import ApnaCollegeJavaHome from '../src/components/VideoPlayer/Java/Apna College/ApnaCollegeJavaHome.jsx'
+import ChaiAurCodeJavaHome from '../src/components/VideoPlayer/Java/ChaiAurCode/ChaiAurCodeJavaHome.jsx'
+import ProgrammingwithmoshHome from '../src/components/VideoPlayer/Java/Mosh/ProgrammingwithmoshJavaHome.jsx'
 // Check your ability
 import MainPageCYA from '/src/components/Check-Your-Ability/MainPageCYA'
 import InterviewRounds from '/src/components/Check-Your-Ability/InterviewRounds.jsx'
@@ -50,10 +54,23 @@ function App() {
         <Route path='courses/javascript' element={<JavaScript/>}/> 
         <Route path='courses/mern' element={<Mern/>}/> 
 
+        {/* C */}
         <Route path='/c/apna-college' element={<ApnaCollegeCHome/>}/> 
         <Route path='/c/jenny-lecture' element={<JennyCHome/>}/> 
+        <Route path='/c/college-wallah' element={<CollegeWallahCHome/>}/> 
 
+        {/* cpp */}
         <Route path='/cpp/apna-college' element={<ApnaCollegeCppHome/>}/> 
+        <Route path='/cpp/chai-aur-code' element={<ChaiAurCodeCppHome/>}/>
+        <Route path='/cpp/jenny-lecture' element={<JennyCppHome/>}/>
+
+{/* java */}
+      <Route path='/Java/apna-college' element={<ApnaCollegeJavaHome/>}/>
+      <Route path='/Java/chai-aur-code' element={<ChaiAurCodeJavaHome/>}/>
+      <Route path='/Java/programming-with-mosh' element={<ProgrammingwithmoshHome/>}/>
+
+
+        
           {/* Check your ability */}
 
         

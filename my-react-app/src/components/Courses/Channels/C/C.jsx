@@ -7,6 +7,10 @@ function C() {
   function jenny(){
     window.open(`${window.location.origin}/c/jenny-lecture`, '_blank');
   }
+   function collegewallah(){
+    window.open(`${window.location.origin}/c/college-wallah`, '_blank');
+  }
+
 
   return (
     <>
@@ -144,7 +148,11 @@ function C() {
               </p>
 
               <div className="flex justify-center sm:justify-start">
-                <button className="mt-3 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+                <button 
+                onClick={collegewallah
+            
+                }
+                className="mt-3 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
                   Start Learning
                 </button>
               </div>

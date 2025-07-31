@@ -1,105 +1,63 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import PlayListSidebar from "../Apna College/PlayListSidebar.jsx";
+import PlayListSidebar from "./PlayListSidebar.jsx";
 import PlayListPlayer from "../../Common Components/PlayListPlayer";
 
-
-const ApnaCollegeCHome = () => {
+const JennyCHome = () => {
   const apiKey = "AIzaSyBs569PnYQUNFUXon5AMersGFuKS8aS1QQ";
-  const playlistId = "PLfqMhTWNBTe137I_EPQd34TsgV6IO55pt";
-  const maxResults = 50;
+  const videoId = "irqbmMNs2Bo"; 
 
   const [videos, setVideos] = useState([]);
   const [durations, setDurations] = useState({});
   const [totalDuration, setTotalDuration] = useState("");
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [loading, setLoading] = useState(true); //
   const [selectedVideoId, setSelectedVideoId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    fetchPlaylist();
+    fetchVideo();
   }, []);
 
-  const fetchPlaylist = async () => {
-    setLoading(true); // Show loading
+  const fetchVideo = async () => {
+    setLoading(true);
     try {
-      let nextPageToken = "";
-      let allVideos = [];
+      const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${apiKey}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const video = data.items[0];
 
-      do {
-        const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=${maxResults}&playlistId=${playlistId}&key=${apiKey}&pageToken=${nextPageToken}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        allVideos.push(...data.items);
-        nextPageToken = data.nextPageToken || "";
-      } while (nextPageToken);
+      if (!video) throw new Error("Video not found");
 
-      const videoIds = allVideos.map((item) => item.snippet.resourceId.videoId);
-      const chunks = chunkArray(videoIds, 50);
+      const iso = video.contentDetails.duration;
+      const duration = formatDuration(iso);
+      const totalSeconds = durationToSeconds(iso);
 
-      let durationsMap = {};
-      let totalSeconds = 0;
+      setDurations({ [video.id]: duration });
+      setTotalDuration(secondsToHMS(totalSeconds));
 
-      for (let chunk of chunks) {
-        const ids = chunk.join(",");
-        const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`;
-        const res = await fetch(detailsUrl);
-        const data = await res.json();
-        data.items.forEach((item) => {
-          const iso = item.contentDetails.duration;
-          durationsMap[item.id] = formatDuration(iso);
-          totalSeconds += durationToSeconds(iso);
-        });
-      }
+      const formattedVideo = {
+        snippet: {
+          ...video.snippet,
+          resourceId: { videoId: video.id },
+        },
+        id: video.id,
+      };
+
+      setVideos([formattedVideo]);
+      setSelectedVideo(formattedVideo);
+      setSelectedVideoId(video.id);
 
       const urlVideoId = searchParams.get("v");
-
-      const defaultVideo =
-        allVideos.find((v) => v.snippet.resourceId.videoId === urlVideoId) ||
-        allVideos[0];
-
-      // ⬇️ Add this logic: If no ?v= is in the URL, update it with the default video
-      if (!urlVideoId && defaultVideo) {
-        setSearchParams({ v: defaultVideo.snippet.resourceId.videoId });
+      if (!urlVideoId) {
+        setSearchParams({ v: video.id });
       }
-
-      setDurations(durationsMap);
-      setTotalDuration(secondsToHMS(totalSeconds));
-      setVideos(allVideos);
-      setSelectedVideo(defaultVideo);
-      setSelectedVideoId(defaultVideo.snippet.resourceId.videoId);
-    } catch (error) {
-      console.error("Error loading playlist:", error);
+    } catch (err) {
+      console.error("Error loading video:", err);
     } finally {
-      setLoading(false); // Done loading
+      setLoading(false);
     }
-  };
-
-  useEffect(() => {
-  const urlVideoId = searchParams.get("v");
-  if (!urlVideoId || videos.length === 0) return;
-
-  // Only update if the video ID from the URL is different from the selected one
-  if (urlVideoId !== selectedVideoId) {
-    const matchedVideo = videos.find(
-      (v) => v.snippet.resourceId.videoId === urlVideoId
-    );
-    if (matchedVideo) {
-      setSelectedVideo(matchedVideo);
-      setSelectedVideoId(urlVideoId);
-    }
-  }
-}, [searchParams, videos]);
-
-
-  const chunkArray = (array, size) => {
-    const result = [];
-    for (let i = 0; i < array.length; i += size) {
-      result.push(array.slice(i, i + size));
-    }
-    return result;
   };
 
   const formatDuration = (iso) => {
@@ -134,7 +92,7 @@ const ApnaCollegeCHome = () => {
       const id = video.snippet.resourceId.videoId;
       setSelectedVideo(video);
       setSelectedVideoId(id);
-      setSearchParams({ v: id }); // Update URL with selected video ID
+      setSearchParams({ v: id });
       setLoading(false);
     }, 500);
   };
@@ -155,4 +113,4 @@ const ApnaCollegeCHome = () => {
   );
 };
 
-export default ApnaCollegeCHome;
+export default JennyCHome;

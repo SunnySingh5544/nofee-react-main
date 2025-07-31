@@ -4,7 +4,7 @@ const ChannelCard = ({name, channel, image}) => {
       <img
         src={image}
         alt="Instructor"
-        className="w-16 h-16 rounded-sm object-cover"
+        className="w-16 h-16 rounded-sm object-contain"
       />
       <div>
         <div className="text-lg font-semibold">{name}</div>
